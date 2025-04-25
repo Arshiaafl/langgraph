@@ -9,6 +9,8 @@ For reviews, pass any specified focus (e.g., 'payment terms') to the focus param
 For summaries, pass any word limit (e.g., '100 words') to the word_limit parameter.
 For modifications, pass the modification instruction to the modification parameter.
 
+**Important:** Do Not EVER change contract_id, user_id and organization_id passed from endpoint.
+
 Examples:
 - Prompt: 'Summarize the contract in 100 words, review its payment terms, and modify the payment terms to CAD $200/hour.'
   Tool Calls:

@@ -78,29 +78,19 @@ def modify_contract_tool(user_id: str, contract_id: str, modification: str) -> s
         response = llm.invoke(messages)
         
         if not hasattr(response, "content") or not isinstance(response.content, str):
-            return "Error: Invalid response from LLM."
+            return print("Error: Invalid response from LLM.")
         
         modified_text = response.content.strip()
         if not modified_text:
-            return "Error: LLM returned empty modified text."
+            return print("Error: LLM returned empty modified text.")
         
-        # Create a new DOCX file with modified text
-        doc = Document()
-        doc.add_paragraph(modified_text)
-        doc_buffer = BytesIO()
-        doc.save(doc_buffer)
-        doc_buffer.seek(0)
-        
+        print("saving modified to blob")
         # Save modified contract to Azure with version suffix
-        modified_blob_path = f"contracts/{contract_id}_/{contract_id}_v2.docx"
-        upload_result = upload_contract_to_blob(user_id=user_id, blob_path=modified_blob_path, file_buffer=doc_buffer)
+        upload_contract_to_blob(modified_text, "modify", contract_id)
+
+        return modified_text
         
-        if upload_result.startswith("Error"):
-            return f"Error: Failed to save modified contract. {upload_result}"
-        
-        # Return confirmation message
-        return f"Contract modified successfully: {modification}. Updated contract saved as {modified_blob_path}."
-    
+
     except Exception as e:
         print(f"Error modifying contract: {str(e)}")
         return f"Error modifying contract: {str(e)}"
